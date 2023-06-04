@@ -15,7 +15,6 @@ import io.cucumber.testng.CucumberOptions;
 		dryRun = false,
 		monochrome = true
 		)
-
 public class LoginPageTestRunnerTestng extends AbstractTestNGCucumberTests {
 
 }

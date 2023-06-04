@@ -11,7 +11,6 @@ public class AddNewCustomerPage {
 	WebDriver driver;
 
 	public AddNewCustomerPage(WebDriver driver) {
-
 		this.driver = driver;
 		PageFactory.initElements(driver, this);
 	}
@@ -57,70 +56,45 @@ public class AddNewCustomerPage {
 
 
 	public void clickNewCustomer() {
-
 		newCustomer.click();
 	}
-
 	public void enterCustomerName(String CName) {
-
 		customerName.sendKeys(CName);
 	}
-
 	public void select_Female() {
-
 		genderFemale.click();
 	}
-
 	public void select_kMale() {
-
 		genderMale.click();
 	}
-
 	public void enterBirthDate(String mm, String dd, String yyyy) {
 
 		birthDate.sendKeys(mm);
 		birthDate.sendKeys(mm);
 		birthDate.sendKeys(yyyy);
 	}
-
 	public void enterAddress(String adrs) {
-
 		addrss.sendKeys(adrs);
 	}
-
 	public void enterCityNameF(String ct) {
-
 		cityName.sendKeys(ct);
 	}
-
 	public void enterStateName(String stat) {
-
 		stateName.sendKeys(stat);
 	}
-
 	public void enterPin(String pin) {
-
 		pinNo.sendKeys(pin);
 	}
-
 	public void enterMobileNumber(String tphone) {
-
 		telephone.sendKeys(tphone);
 	}
-
 	public void enterEmail(String eml) {
-
 		emailId.sendKeys(eml);
 	}
-
 	public void enterPassWord(String pw) {
-
 		passWord.sendKeys(pw);
 	}
-
 	public void clickSubmitButton() {
-
 		submitButton.click();
 	}
-
 }

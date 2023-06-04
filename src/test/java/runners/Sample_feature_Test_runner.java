@@ -8,10 +8,8 @@ import io.cucumber.testng.CucumberOptions;
 		glue = {"stepDefinitions/loginPageSteps", "Hooks/Hook"},
 		plugin = {"com.aventstack.extentreports.cucumber.adapter.ExtentCucumberAdapter:" },
 		dryRun = false,
-		monochrome = true
-		
+		monochrome = true		
 		)
-
 public class Sample_feature_Test_runner extends AbstractTestNGCucumberTests {
 
 }
