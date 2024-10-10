@@ -90,6 +90,7 @@ Feature: open cart home page
       | johans    | burgmans | abcds@gmail.com |   56775456 | iruri 1  | irur1i 11        |
       | johan     | burgman  | abcd@gmail.com  | 2424356454 | iruri 2  | irur2i 22        |
       | johana    | burgmana | abcda@gmail.com |  878864446 | iruri 3  | irur3i 33        |
+    
     And verify data table with list
       | johans | burgmans | abcds@gmail.com |   56775456 | iruri 1 | iruri 11 |
       | johan  | burgman  | abcd@gmail.com  | 2424356454 | iruri 2 | iruri 22 |
