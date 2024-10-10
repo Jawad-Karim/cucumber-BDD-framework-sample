@@ -1,0 +1,328 @@
+---------------------------------------------------------------------------------------
+**** Execution Order in Cucumber *********
+Before > Background > Scenario > After.
+---------------------- use of tags ----------------------------------------------------
+Keyword: @tags used to control the execution of our test Scenario.
+We can do one or more Tag over the Scenario, Scenario Outline, or Feature.
+The Tag will be Executed which one is called….
+Syntax –
+@ End to End Test 
+Feature: name of the feature
+
+@ End to End regression test
+Feature: name of the feature
+
+@ Smoke test
+Scenario: name of the Scenario
+
+@ Sanity test
+Scenario: name the Scenario
+
+@ Smoke test, @Sanity test
+Scenario: name of the Scenario
+
+@ Smoke test
+Scenario Outline: name of the Scenario Outline
+------------------------ run scenarios using tags -------------------------
+@RunWith(Cucumber.class)
+@CucumberOptions(features = "featureFiles",
+glue = {"stepDefinition"},
+
+// used above 'feature' keyword to run all scenarios.
+tags = "@All"  
+
+// will run all Smoke scenarios also combined with regression.
+tags = "@Smoke"  
+
+//all scenarios will run that has any of below tags doesn’t matter any one passed or not.
+tags = "@Smoke or @Regression"
+
+// will run combined tag scenarios only
+tags = "@SmokeTest and @RegressionTest"
+
+// will run all smoke except regression
+tags = "@SmokeTest and not @RegressionTest"
+
+// will run all un-tag scenarios
+tags = "not @SmokeTest and not @RegressionTest"
+
+// will run all scenarios except regression 
+tags = "not @RegressionTest"
+
+// will run all scenarios that has @important or combination of @Smoke and @Regression
+tags = "@important or @Smoke and @Regression"
+)
+public class TagRaunnerTest {
+
+}
+
+
+-------------------- Sample Feature Definition Template ----------------------------------
+
+
+@regression
+Feature: open cart home page
+
+  Background: 
+    Given I want to open browser and go to url
+	And I want to click on myAccount button
+	
+  @smoke
+  Scenario: Registation page    
+    When click on Register button
+
+  @smoke, @sanity
+  Scenario Outline: Login page
+    When click on Login option
+    And enter id no <number> in text box
+    And enter userName "<user name>"
+    And enter password "<password>"
+    And click login button
+    Then verify Home page title
+    
+    Examples: 
+      | user name           | password  | number |
+      | ahsalga@gmail.com   | pass123   |    121 |
+      | ahsgsalga@gmail.com | pass12345 |    122 |
+    
+    And verify data table with Hash Map
+      | firstName | lastName | email           | telephonNo | password | confirm password |
+      | johans    | burgmans | abcds@gmail.com |   56775456 | iruri 1  | irur1i 11        |
+      | johan     | burgman  | abcd@gmail.com  | 2424356454 | iruri 2  | irur2i 22        |
+      | johana    | burgmana | abcda@gmail.com |  878864446 | iruri 3  | irur3i 33        |
+    And verify data table with list
+      | johans | burgmans | abcds@gmail.com |   56775456 | iruri 1 | iruri 11 |
+      | johan  | burgman  | abcd@gmail.com  | 2424356454 | iruri 2 | iruri 22 |
+      | johana | burgmana | abcda@gmail.com |  878864446 | iruri 3 | iruri 33 |
+
+    
+---------------------------- Step Definition for the feature ---------------------------------
+public class BackgroundSteps {
+	
+	@Given("I want to open browser and go to url")
+	public void i_want_to_open_browser_and_go_to_url() {
+	    System.out.println("open browser");
+	}
+	@And("I want to click on myAccount button")
+	public void i_want_to_click_on_my_account_button() {
+		System.out.println("click on my Account button"); 
+	}
+}
+public class RegisterSteps {	
+	
+	@And("click on Register button")
+	public void click_on_register_button() {
+	    System.out.println("click on Register Button");
+	}
+}
+public class LoginPageSteps {
+
+	@When("click on Login option")
+	public void click_on_login_option() {
+		System.out.println("click on login option");
+	}
+	@And("enter id no {int} in text box")
+	public void enter_id_no_in_text_box(Integer num) {
+		System.out.println("number: "+num);
+	}
+	@And("enter userName {string}")
+	public void enter_user_name(String uName) {
+		System.out.println("enter user name:"+uName);
+	}
+	@And("enter password {string}")
+	public void enter_password(String pass) {
+		System.out.println("enter password: "+pass);	    
+	}
+	@And("click login button")
+	public void click_login_button() {
+		System.out.println("click login button");
+	}
+	@Then("verify Home page title")
+	public void verify_home_page_title() {
+		System.out.println("verify title");
+	}
+	@And("verify data table with Hash Map")
+	public void verify_data_table_with_hash_map(io.cucumber.datatable.DataTable dataTable) {
+		
+		// E, List<E>, List<List<E>>, List<Map<K,V>>, Map<K,V> or
+		// Map<K, List<V>>. E,K,V must be a String, Integer, Float,
+
+		List<Map<String, String>> dataMap = dataTable.asMaps();
+		System.out.println("First name: "+ dataMap.get(0).get("firstName"));
+		for(Map<String, String> map : dataMap) {
+			System.out.println("First Names: "+ map.get("firstName"));
+		}
+	}
+	@And("verify data table with list")
+	public void verify_data_table_with_list(io.cucumber.datatable.DataTable dataTable) {
+	
+		// E, List<E>, List<List<E>>, List<Map<K,V>>, Map<K,V> or
+		// Map<K, List<V>>. E,K,V must be a String, Integer, Float,
+
+		List<List<String>> dataList = dataTable.asLists();
+		System.out.println("first data: "+ dataList.get(0).get(1));
+		for(List<String> datas : dataList) {
+			for(String data : datas) {
+				System.out.println("list data: "+data);
+			}
+		}
+	}
+}
+---------------------- Test Runner Sample -------------------------------------------
+@RunWith(Cucumber.class)
+@CucumberOptions(features = "featureFiles",
+glue = {"stepDefinition"},
+monochrome = true,
+tags = "@Smoke",
+plugin = {"pretty", "html:target/cucumber.html", "json:target/cucumber.json"}
+)
+public class TagRaunnerTest {
+
+}
+
+---------------------- parallel execution in cucumber -------------------------------------------
+** parallel execution in junit. **
+import org.junit.runner.RunWith;
+
+@RunWith(Cucumber.class)
+public class RunCucumberTest {
+}
+// set parallel in pom.xml file
+<plugin>
+    <groupId>org.apache.maven.plugins</groupId>
+    <artifactId>maven-surefire-plugin</artifactId>
+    <version>2.22.0</version>
+    <configuration>
+        <parallel>methods</parallel>
+        <useUnlimitedThreads>true</useUnlimitedThreads>
+   OR   <threadCount>4</threadCount>
+    </configuration>
+</plugin>
+
+// if you want run multiple runners
+<configuration>
+    <parallel>classes</parallel>  OR  <parallel>classesAndMethods</parallel>
+    useUnlimitedThreads>true</useUnlimitedThreads>
+</configuration>
+
+** parallel execution in TestNG **
+public class RunCucumberTest extends AbstractTestNGCucumberTests{
+
+    @Override
+    @DataProvider(parallel = true)   //max threads 10 will run
+    public Object[][] scenarios() {
+        return super.scenarios();
+    }}
+// Add the Maven Surefire plugin configuration to the build section of the POM.
+<plugin>
+    <groupId>org.apache.maven.plugins</groupId>
+    <artifactId>maven-surefire-plugin</artifactId>
+    <version>2.22.0</version>
+</plugin>
+
+// if want to run more threads than 10 then set it in pom.xml
+<configuration>
+    <properties>
+        <property>
+            <name>dataproviderthreadcount</name>
+            <value>20</value>
+        </property>
+    </properties>
+</configuration>
+
+// if want to run multiple runners in parallel 
+<configuration>
+    <parallel>classes</parallel>
+    <threadCount>4</threadCount>
+</configuration>
+
+--------------- reporting -------------------------------------------------------------------
+
+@RunWith(Cucumber.class)
+@CucumberOptions(features = "featureFiles",
+glue = {"stepDefinition"},
+monochrome = true,
+tags = "@Smoke",
+plugin = {"pretty", "html:target/cucumber.html", "json:target/cucumber.json",} 
+OR
+plugin = {"pretty", "json:target/cucumber-reports/cucumber.json",
+			"html:target/cucumber-reports/cucumberreport.html",
+			"com.aventstack.extentreports.cucumber.adapter.ExtentCucumberAdapter:"}
+)
+public class TagRaunnerTest {
+
+}
+** for extentReport **
+1. add dependency 
+<dependency>
+    <groupId>tech.grasshopper</groupId>
+    <artifactId>extentreports-cucumber7-adapter</artifactId>
+    <version>1.14.0</version>
+</dependency>
+
+2. Create extent.properties file in src/test/resources 
+
+extent.reporter.spark.start=true
+extent.reporter.spark.out=test-output/SparkReport/Spark.html
+
+extent.reporter.pdf.start=false
+extent.reporter.pdf.out=test output/PdfReport/ExtentPdf.pdf
+
+extent.reporter.html.start=false
+extent.reporter.html.out=test-output/HtmlReport/ExtentHtml.html
+
+screenshot.dir=test-output/
+screenshot.rel.path=../
+
+basefolder.name=reports
+basefolder.datetimepattern=d-MMM-YY HH-mm-ss
+
+3. attach screenshot to the failed scenario step
+public class Hooks {	
+	WebDriver driver;
+	
+	@AfterStep
+	public void attachScreenshot(Scenario scenario) {
+		
+		if(scenario.isFailed()) {
+			String base64 = ((TakesScreenshot)driver).getScreenshotAs(OutputType.BASE64);
+			scenario.attach(base64,"image/png", scenario.getName());
+		}		
+	}
+}
+-------------------- How to re-run failed test scenarios ------------------------------------------------------
+1. add rerun:target/failed_scenarios.txt into Test Runner plugin
+@RunWith(Cucumber.class)
+@CucumberOptions(
+features = "featureFiles",
+glue = {"stepDefinition"},
+monochrome = true,
+tags = "@Smoke",
+plugin = {"pretty", "html:target/cucumber.html", "json:target/cucumber.json",
+			"json:target/cucumber-reports/cucumber.json",
+			"html:target/cucumber-reports/cucumberreport.html",
+			"com.aventstack.extentreports.cucumber.adapter.ExtentCucumberAdapter:",
+			"rerun:target/failed_scenarios.txt"}
+)
+public class TagRaunnerTest {
+
+}
+
+2. create a Failed_Test_Runner class to run only failed scenarios
+set features = "@target/failed_scenarios.txt"
+remove tags and "rerun:target/failed_scenarios.txt"
+
+@RunWith(Cucumber.class)
+@CucumberOptions(
+features = features = "@target/failed_scenarios.txt",
+glue = {"stepDefinition"},
+monochrome = true,
+plugin = {"pretty", "html:target/cucumber.html", "json:target/cucumber.json",
+			"json:target/cucumber-reports/cucumber.json",
+			"html:target/cucumber-reports/cucumberreport.html",
+			"com.aventstack.extentreports.cucumber.adapter.ExtentCucumberAdapter:"
+			}
+)
+public class TagRaunnerTest {
+
+}
